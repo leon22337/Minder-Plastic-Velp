@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="pageTitle">Minder Plastic Velp — Less Plastic, More Life</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <span class="nav-logo-leaf">🌿</span> Minder Plastic Velp
+      </a>
+      <ul class="nav-links">
+        <li><a href="#problem"  data-i18n="nav.problem">The Problem</a></li>
+        <li><a href="#impact"   data-i18n="nav.impact">Impact</a></li>
+        <li><a href="#reusable" data-i18n="nav.solutions">Solutions</a></li>
+        <li><a href="#reply"    data-i18n="nav.reply">Supermarkets Reply</a></li>
+        <li><a href="#action"   class="nav-cta" data-i18n="nav.cta">Take Action</a></li>
+        <li>
+          <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()" aria-label="Switch language">
+            <span class="lang-flag" id="langFlag">🇳🇱</span>
+            <span class="lang-label" id="langLabel">NL</span>
+          </button>
+        </li>
+      </ul>
+      <div class="nav-right-mobile">
+        <button class="lang-toggle lang-toggle-mobile" onclick="toggleLanguage()" aria-label="Switch language">
+          <span class="lang-flag" id="langFlagMobile">🇳🇱</span>
+          <span class="lang-label" id="langLabelMobile">NL</span>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#problem"  onclick="closeMobileMenu()" data-i18n="nav.problem">The Problem</a>
+      <a href="#impact"   onclick="closeMobileMenu()" data-i18n="nav.impact">Impact</a>
+      <a href="#reusable" onclick="closeMobileMenu()" data-i18n="nav.solutions">Solutions</a>
+      <a href="#reply"    onclick="closeMobileMenu()" data-i18n="nav.reply">Supermarkets Reply</a>
+      <a href="#action"   onclick="closeMobileMenu()" data-i18n="nav.cta">Take Action</a>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="hero-orb"></div>
+    <div class="hero-orb-2"></div>
+    <div class="leaf leaf-1">🍃</div>
+    <div class="leaf leaf-2">🌿</div>
+    <div class="leaf leaf-3">🍀</div>
+    <div class="leaf leaf-4">🍃</div>
+    <div class="leaf leaf-5">🌱</div>
+
+    <div class="hero-content fade-in">
+      <div class="hero-tag">
+        <span class="tag-dot"></span>
+        <span data-i18n="hero.tag">Velp, Netherlands — Community Initiative</span>
+      </div>
+      <h1 class="hero-title" data-i18n-html="hero.title">
+        Every bag <em>counts.</em><br />Every choice <em>matters.</em>
+      </h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">
+        Supermarkets in Velp hand out thousands of plastic bags every week.
+        Together, we can ask them to change — politely, simply, effectively.
+      </p>
+      <div class="hero-buttons">
+        <a href="#action"  class="btn btn-primary"  data-i18n="hero.ctaPrimary">✉️ Send an Email Now</a>
+        <a href="#problem" class="btn btn-secondary" data-i18n="hero.ctaSecondary">Learn Why →</a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span data-i18n="hero.scroll">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,36 C240,72 480,0 720,36 C960,72 1200,0 1440,36 L1440,72 L0,72 Z" fill="#ede7d9"/>
+    </svg>
+  </div>
+
+  <!-- ========== PROBLEM ========== -->
+  <section class="section section-stone" id="problem">
+    <div class="container">
+      <div class="section-label" data-i18n="problem.label">Why This Matters</div>
+      <h2 class="section-title" data-i18n="problem.title">The Plastic Bag Problem</h2>
+      <p class="section-intro" data-i18n="problem.intro">Plastic bags seem harmless — until you follow their journey after the bin.</p>
+      <div class="cards-grid">
+        <div class="card slide-up">
+          <span class="card-icon">🌊</span>
+          <h3 data-i18n="problem.card1.title">They End Up in Nature</h3>
+          <p data-i18n="problem.card1.body">Millions of bags end up in rivers, parks, and oceans every year. They break into microplastics that enter the food chain — including the food on your table.</p>
+        </div>
+        <div class="card slide-up delay-1">
+          <span class="card-icon">⏳</span>
+          <h3 data-i18n="problem.card2.title">They Last 500+ Years</h3>
+          <p data-i18n="problem.card2.body">A single plastic bag takes up to 500 years to decompose. Used for 10 minutes, it outlives every person alive today — many times over.</p>
+        </div>
+        <div class="card slide-up delay-2">
+          <span class="card-icon">🐢</span>
+          <h3 data-i18n="problem.card3.title">Wildlife Suffers</h3>
+          <p data-i18n="problem.card3.body">Sea turtles mistake bags for jellyfish. Birds feed them to chicks. Over one million marine animals die from plastic pollution every single year.</p>
+        </div>
+        <div class="card slide-up delay-3">
+          <span class="card-icon">🏘️</span>
+          <h3 data-i18n="problem.card4.title">Velp Is Affected Too</h3>
+          <p data-i18n="problem.card4.body">Plastic litter is found along the IJssel riverbanks, in Velp's parks, and on neighbourhood streets. Our local environment deserves better.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,36 C360,0 720,72 1080,36 C1260,18 1380,54 1440,36 L1440,72 L0,72 Z" fill="#2d3a1f"/>
+    </svg>
+  </div>
+
+  <!-- ========== STATS ========== -->
+  <section class="section section-dark" id="impact">
+    <div class="container">
+      <div class="section-label" data-i18n="impact.label">By the Numbers</div>
+      <h2 class="section-title" data-i18n="impact.title">The Scale of the Problem</h2>
+      <div class="stats-grid">
+        <div class="stat-item fade-in">
+          <span class="stat-number" data-target="5000000000">0</span>
+          <span class="stat-unit" data-i18n="impact.stat1.unit">bags / year</span>
+          <p class="stat-desc"  data-i18n="impact.stat1.desc">used in the Netherlands alone</p>
+        </div>
+        <div class="stat-item fade-in delay-1">
+          <span class="stat-number" data-target="500">0</span>
+          <span class="stat-unit" data-i18n="impact.stat2.unit">years</span>
+          <p class="stat-desc"  data-i18n="impact.stat2.desc">for one bag to decompose</p>
+        </div>
+        <div class="stat-item fade-in delay-2">
+          <span class="stat-number" data-target="12">0</span>
+          <span class="stat-unit" data-i18n="impact.stat3.unit">minutes</span>
+          <p class="stat-desc"  data-i18n="impact.stat3.desc">average bag use time</p>
+        </div>
+        <div class="stat-item fade-in delay-3">
+          <span class="stat-number" data-target="80">0</span>
+          <span class="stat-unit" data-i18n="impact.stat4.unit">%</span>
+          <p class="stat-desc"  data-i18n="impact.stat4.desc">of ocean plastic comes from land</p>
+        </div>
+      </div>
+      <div class="impact-quote">
+        <blockquote data-i18n="impact.quote">"The most powerful step a supermarket can take is to stop automatically offering plastic bags at the checkout."</blockquote>
+        <cite data-i18n="impact.quoteSource">— Plastic Soup Foundation, Netherlands</cite>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C480,80 960,0 1440,40 L1440,80 L0,80 Z" fill="#f7f2e8"/>
+    </svg>
+  </div>
+
+  <!-- ========== REUSABLE ========== -->
+  <section class="section" id="reusable" style="background:var(--sand);">
+    <div class="container">
+      <div class="section-label" data-i18n="reusable.label">The Solution</div>
+      <h2 class="section-title" data-i18n="reusable.title">Reusable Is the Future</h2>
+      <p class="section-intro" data-i18n="reusable.intro">Small changes in habit make a massive collective difference.</p>
+      <div class="reusable-grid">
+        <div class="reusable-card slide-up">
+          <span class="reusable-icon">👜</span>
+          <h4 data-i18n="reusable.card1.title">Bring Your Own Bag</h4>
+          <p  data-i18n="reusable.card1.body">Keep a tote in your coat pocket or backpack. You'll never need a plastic bag again.</p>
+        </div>
+        <div class="reusable-card slide-up delay-1">
+          <span class="reusable-icon">♻️</span>
+          <h4 data-i18n="reusable.card2.title">Choose Paper Over Plastic</h4>
+          <p  data-i18n="reusable.card2.body">When you forget your bag, pick paper. It biodegrades in weeks, not centuries.</p>
+        </div>
+        <div class="reusable-card slide-up delay-2">
+          <span class="reusable-icon">🗣️</span>
+          <h4 data-i18n="reusable.card3.title">Ask the Supermarket</h4>
+          <p  data-i18n="reusable.card3.body">Supermarkets respond to customer feedback. A polite email from many people creates real change.</p>
+        </div>
+        <div class="reusable-card slide-up delay-3">
+          <span class="reusable-icon">👥</span>
+          <h4 data-i18n="reusable.card4.title">Spread the Word</h4>
+          <p  data-i18n="reusable.card4.body">Share this page with friends and family in Velp. Community pressure works.</p>
+        </div>
+      </div>
+      <div class="fun-fact slide-up">
+        <span class="fun-fact-icon">💡</span>
+        <p data-i18n-html="reusable.funFact"><strong>Did you know?</strong> One reusable cotton bag replaces up to <strong>700 plastic bags</strong> over its lifetime. That's 700 bags that never enter the environment.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z" fill="#ede7d9"/>
+    </svg>
+  </div>
+
+  <!-- ========== SUPERMARKETS ========== -->
+  <section class="section section-stone" id="supermarkets">
+    <div class="container">
+      <div class="supermarkets-layout">
+        <div>
+          <div class="section-label" data-i18n="supermarkets.label">Local Focus</div>
+          <h2 class="section-title"  data-i18n="supermarkets.title">Supermarkets in Velp</h2>
+          <p class="section-intro"   data-i18n="supermarkets.intro">These are the supermarkets we're encouraging to reduce plastic bag usage. Each one has the power to make a significant local impact.</p>
+          <div class="supermarkets-list">
+            <div class="supermarket-item slide-up">
+              <span class="supermarket-logo">🛒</span>
+              <div><strong>Albert Heijn Velp</strong><span>Hoofdstraat, Velp</span></div>
+            </div>
+            <div class="supermarket-item slide-up delay-1">
+              <span class="supermarket-logo">🛒</span>
+              <div><strong>Jumbo Velp</strong><span>Arnhemsestraatweg, Velp</span></div>
+            </div>
+            <div class="supermarket-item slide-up delay-2">
+              <span class="supermarket-logo">🛒</span>
+              <div><strong>Lidl Velp</strong><span>Berkenlaan, Velp</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="supermarkets-deco">
+          <div class="deco-circle">
+            <span class="deco-number">3</span>
+            <span class="deco-label" data-i18n-html="supermarkets.decoLabel">supermarkets<br />in Velp to contact</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,36 C240,72 480,0 720,36 C960,72 1200,0 1440,36 L1440,72 L0,72 Z" fill="#f7f2e8"/>
+    </svg>
+  </div>
+
+  <!-- ========== ACTION ========== -->
+  <section class="section" id="action" style="background:var(--sand);">
+    <div class="container">
+      <div class="section-label" data-i18n="action.label">Take Action</div>
+      <h2 class="section-title"  data-i18n="action.title">Send an Email Today</h2>
+      <p class="section-intro"   data-i18n="action.intro">We've written a polite, friendly email for you. One click opens it in your email app — read, edit, and personalise before sending. It takes less than 2 minutes.</p>
+
+      <div class="email-preview slide-up">
+        <div class="email-chrome">
+          <span class="email-dot"></span><span class="email-dot"></span><span class="email-dot"></span>
+          <span class="email-chrome-label" data-i18n="action.emailChrome">New Message</span>
+        </div>
+        <div class="email-header">
+          <div class="email-field">
+            <span class="email-field-label" data-i18n="action.emailTo">To</span>
+            <em><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0172747164736c60736a754160692f6f6d">[email&#160;protected]</a>, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="214a4d404f55444f52445357484244614b544c434e0f424e4c">[email&#160;protected]</a>, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1e777078715e72777a72307072">[email&#160;protected]</a></em>
+          </div>
+          <div class="email-field">
+            <span class="email-field-label" data-i18n="action.emailSubjectLabel">Subject</span>
+            <em data-i18n="action.emailSubjectValue">Verzoek: Minder Plastic Tasjes in Velp</em>
+          </div>
+        </div>
+        <div class="email-body">
+          <p data-i18n="action.emailOpening">Geachte medewerkers,</p>
+          <p data-i18n="action.emailPreview">Als inwoner van Velp wil ik u vriendelijk vragen om het gebruik van plastic tasjes in uw winkel te verminderen...</p>
+          <p class="email-fade">
+            <a href="#" id="previewToggle" onclick="toggleEmailPreview(event)" data-i18n="action.emailShowMore">Show full email ↓</a>
+          </p>
+          <div id="fullEmailPreview" style="display:none;" class="full-email-preview">
+            <p data-i18n="action.emailBody">Met de groei van milieubewustzijn in onze gemeenschap, en met het oog op de ernstige schade die plastic tasjes toebrengen aan onze rivieren, parken en wilde dieren, wil ik u vragen om de volgende maatregelen te overwegen:</p>
+            <ul>
+              <li data-i18n="action.emailBullet1">Stop met het automatisch aanbieden van plastic tasjes bij de kassa</li>
+              <li data-i18n="action.emailBullet2">Bied herbruikbare of papieren alternatieven aan</li>
+              <li data-i18n="action.emailBullet3">Informeer uw klanten over het milieu-effect van plastic</li>
+              <li data-i18n="action.emailBullet4">Overweeg een kleine bijdrage te vragen voor plastic tasjes</li>
+            </ul>
+            <p data-i18n="action.emailClosing">Als vaste klant van uw winkel geloof ik dat kleine aanpassingen een groot verschil kunnen maken voor Velp en de omgeving. Ik hoop van harte op uw medewerking.</p>
+            <p data-i18n-html="action.emailSignature">Met vriendelijke groet,<br /><em>[Uw naam]</em><br />Inwoner van Velp</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="counter-section">
+        <div class="counter-display">
+          <span class="counter-number" id="counterDisplay">0</span>
+          <span class="counter-label" data-i18n="action.counterLabel">people in Velp have clicked this button</span>
+        </div>
+      </div>
+
+      <div class="cta-center">
+        <button class="btn btn-large btn-primary pulse" id="emailBtn" onclick="sendEmail()" data-i18n="action.emailBtn">
+          ✉️ Open Email in My Mail App
+        </button>
+        <p class="cta-note" data-i18n="action.emailNote">Your email client will open with a pre-written message.<br />You can edit it before sending — please personalise it!</p>
+      </div>
+
+      <div class="share-section">
+        <p data-i18n="action.shareLabel">Know someone in Velp? Share this page:</p>
+        <div class="share-buttons">
+          <button class="share-btn" onclick="shareWhatsApp()" data-i18n="action.shareWhatsapp">WhatsApp</button>
+          <button class="share-btn" onclick="copyLink()"      data-i18n="action.shareCopy">Copy Link</button>
+          <span id="copyConfirm" class="copy-confirm" style="display:none;" data-i18n="action.copied">✓ Copied!</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,36 C360,0 720,72 1080,36 C1260,18 1380,54 1440,36 L1440,72 L0,72 Z" fill="#ede7d9"/>
+    </svg>
+  </div>
+
+  <!-- ========== REPLY FORM ========== -->
+  <section class="section section-stone" id="reply">
+    <div class="container">
+      <div class="reply-layout">
+        <div class="reply-intro">
+          <div class="section-label" data-i18n="reply.label">Get in Touch</div>
+          <h2 class="section-title"  data-i18n="reply.title">Are You a Supermarket?</h2>
+          <p data-i18n="reply.body">We'd love to hear from you. Whether you're already reducing plastic, or you'd like to share your plans — your response matters to this community.</p>
+          <p style="margin-top:16px;" data-i18n="reply.emailPrompt">You can also reach us directly:</p>
+          <a href="/cdn-cgi/l/email-protection#7204171e025c021e1301061b115c1311061b1732151f131b1e5c111d1f" class="reply-email-link">
+            ✉️ <span class="__cf_email__" data-cfemail="8cfae9e0fca2fce0edfff8e5efa2edeff8e5e9ccebe1ede5e0a2efe3e1">[email&#160;protected]</span>
+          </a>
+          <div class="reply-why">
+            <span class="reply-why-icon">💬</span>
+            <div>
+              <strong data-i18n="reply.whyTitle">Why respond?</strong>
+              <p data-i18n="reply.whyBody">Showing your community that you care about sustainability builds real trust and loyalty. Even a short message makes a difference.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reply-form-wrap">
+          <div id="formSuccess" class="form-success" style="display:none;">
+            <span class="form-success-icon">✅</span>
+            <h3 data-i18n="reply.successTitle">Message received!</h3>
+            <p  data-i18n="reply.successBody">Thank you for reaching out. We'll read your message and may share your response with the Velp community.</p>
+          </div>
+          <form id="replyForm" class="reply-form" novalidate>
+            <div id="formError" class="form-error" style="display:none;"></div>
+            <div class="form-row form-row-half">
+              <div class="form-group">
+                <label for="replyName"><span data-i18n="reply.form.name">Your name</span> <span class="required">*</span></label>
+                <input type="text"   id="replyName" data-i18n-placeholder="reply.form.namePlaceholder"    placeholder="Jan de Vries" required />
+              </div>
+              <div class="form-group">
+                <label for="replyOrg" data-i18n="reply.form.org">Organisation</label>
+                <input type="text"   id="replyOrg"  data-i18n-placeholder="reply.form.orgPlaceholder"     placeholder="Albert Heijn Velp" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="replyEmail">
+                <span data-i18n="reply.form.email">Email address</span>
+                <span class="hint"> (<span data-i18n="reply.form.emailHint">optional, for follow-up</span>)</span>
+              </label>
+              <input type="email" id="replyEmail" placeholder="manager@supermarkt.nl" />
+            </div>
+            <div class="form-group">
+              <label for="replyMessage"><span data-i18n="reply.form.message">Your message</span> <span class="required">*</span></label>
+              <textarea id="replyMessage" rows="5" data-i18n-placeholder="reply.form.messagePlaceholder" placeholder="We are already working on reducing plastic bags by..."></textarea>
+            </div>
+            <div class="form-footer">
+              <p class="form-privacy" data-i18n="reply.form.privacy">🔒 Your message is stored securely and only visible to the campaign team.</p>
+              <button type="submit" class="btn btn-primary" data-i18n="reply.form.submit">Send Message →</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">🌿 Minder Plastic Velp</span>
+          <p data-i18n="footer.tagline">A community initiative to reduce plastic bag use in Velp, Netherlands. Not affiliated with any supermarket chain.</p>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.linksTitle">Useful Links</h4>
+          <ul>
+            <li><a href="https://www.plasticsoupfoundation.org" target="_blank" rel="noopener">Plastic Soup Foundation</a></li>
+            <li><a href="https://www.milieu-educatie.nl"        target="_blank" rel="noopener">Milieu Educatie</a></li>
+            <li><a href="https://www.rheden.nl"                 target="_blank" rel="noopener">Gemeente Rheden (Velp)</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.campaignTitle">Campaign</h4>
+          <ul>
+            <li><a href="dashboard.html" data-i18n="footer.das

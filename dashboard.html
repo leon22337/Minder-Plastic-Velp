@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Minder Plastic Velp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:#f7f2e8; --paper:#ede7d9; --linen:#e0d8c8;
+    --olive-deep:#2d3a1f; --olive:#3d5228; --olive-mid:#5a7140;
+    --olive-soft:#7a9458; --sage:#a8bc87; --moss-tint:#dde8cf;
+    --terra:#c4622d; --terra-soft:#e8835a;
+    --amber:#d4915a; --amber-pale:#f5e6d3;
+    --ink:#1c2410; --ink-mid:#4a5535; --ink-soft:#7a8a65;
+    --white:#ffffff;
+    --shadow-sm:0 2px 12px rgba(45,58,31,0.08);
+    --shadow-md:0 6px 28px rgba(45,58,31,0.12);
+    --radius-lg:16px; --radius-md:10px; --radius-sm:6px;
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'Plus Jakarta Sans','Helvetica Neue',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:16px;}
+  body{font-family:var(--font-body);background:var(--sand);color:var(--ink);min-height:100vh;}
+
+  /* ── LOGIN SCREEN ── */
+  #loginScreen {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, var(--olive-deep), #3a4a28);
+  }
+  .login-card {
+    background:var(--white); border-radius:var(--radius-lg);
+    padding:48px 40px; max-width:400px; width:100%; margin:24px;
+    box-shadow:var(--shadow-md);
+    text-align:center;
+  }
+  .login-logo { font-size:2.5rem; margin-bottom:16px; }
+  .login-card h1 { font-family:var(--font-display); font-size:1.6rem; color:var(--olive-deep); margin-bottom:8px; }
+  .login-card p  { font-size:0.9rem; color:var(--ink-soft); margin-bottom:32px; }
+  .login-card input {
+    width:100%; padding:12px 16px; border:1.5px solid var(--linen);
+    border-radius:var(--radius-md); font-family:var(--font-body);
+    font-size:1rem; color:var(--ink); background:var(--sand);
+    outline:none; transition:border-color 0.2s;
+    text-align:center; letter-spacing:0.2em;
+    margin-bottom:16px;
+  }
+  .login-card input:focus { border-color:var(--olive-soft); box-shadow:0 0 0 3px rgba(122,148,88,0.15); }
+  .login-btn {
+    width:100%; padding:13px; background:var(--terra); color:var(--white);
+    border:none; border-radius:100px; font-family:var(--font-body);
+    font-size:1rem; font-weight:700; cursor:pointer;
+    transition:background 0.2s, transform 0.2s;
+  }
+  .login-btn:hover { background:var(--terra-soft); transform:translateY(-2px); }
+  .login-error { color:var(--terra); font-size:0.85rem; margin-top:12px; display:none; }
+
+  /* ── DASHBOARD LAYOUT ── */
+  #dashboard { display:none; }
+  .topbar {
+    background:var(--olive-deep); padding:0 32px; height:60px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:10;
+    box-shadow:0 2px 12px rgba(0,0,0,0.2);
+  }
+  .topbar-logo { font-family:var(--font-display); font-size:1.1rem; color:var(--sand); display:flex; align-items:center; gap:8px; }
+  .topbar-actions { display:flex; gap:12px; align-items:center; }
+  .topbar-btn {
+    background:rgba(255,255,255,0.1); color:var(--sand);
+    border:1px solid rgba(255,255,255,0.2); padding:7px 16px;
+    border-radius:100px; font-family:var(--font-body); font-size:0.8rem;
+    font-weight:600; cursor:pointer; transition:background 0.2s;
+  }
+  .topbar-btn:hover { background:rgba(255,255,255,0.2); }
+  .topbar-btn.danger { background:rgba(196,98,45,0.3); border-color:rgba(196,98,45,0.4); }
+  .topbar-btn.danger:hover { background:rgba(196,98,45,0.5); }
+
+  .dash-body { max-width:1200px; margin:0 auto; padding:40px 28px; }
+
+  /* ── STAT CARDS ROW ── */
+  .kpi-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:16px; margin-bottom:40px;
+  }
+  .kpi-card {
+    background:var(--white); border-radius:var(--radius-lg);
+    padding:24px 22px; border:1px solid var(--linen);
+    box-shadow:var(--shadow-sm);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .kpi-label { font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-soft); }
+  .kpi-value { font-family:var(--font-display); font-size:2.4rem; font-weight:700; color:var(--olive-deep); line-height:1; }
+  .kpi-sub   { font-size:0.8rem; color:var(--ink-soft); }
+  .kpi-card.accent-terra .kpi-value { color:var(--terra); }
+  .kpi-card.accent-amber .kpi-value { color:var(--amber); }
+  .kpi-card.accent-olive .kpi-value { color:var(--olive-mid); }
+
+  /* ── GRID 2-COL ── */
+  .dash-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; }
+  .dash-grid.full { grid-template-columns:1fr; }
+
+  /* ── PANELS ── */
+  .panel {
+    background:var(--white); border-radius:var(--radius-lg);
+    border:1px solid var(--linen); box-shadow:var(--shadow-sm);
+    overflow:hidden;
+  }
+  .panel-head {
+    padding:18px 24px; border-bottom:1px solid var(--linen);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .panel-head h3 { font-size:0.9rem; font-weight:700; color:var(--ink); }
+  .panel-head span { font-size:0.78rem; color:var(--ink-soft); }
+  .panel-body { padding:20px 24px; }
+
+  /* ── BAR CHARTS ── */
+  .bar-list { display:flex; flex-direction:column; gap:12px; }
+  .bar-item { display:flex; flex-direction:column; gap:5px; }
+  .bar-meta  { display:flex; justify-content:space-between; font-size:0.8rem; color:var(--ink-mid); }
+  .bar-track { background:var(--paper); border-radius:100px; height:8px; overflow:hidden; }
+  .bar-fill  { height:100%; border-radius:100px; background:linear-gradient(90deg,var(--olive-soft),var(--sage)); transition:width 1s ease; }
+  .bar-fill.terra { background:linear-gradient(90deg,var(--terra),var(--terra-soft)); }
+  .bar-fill.amber { background:linear-gradient(90deg,var(--amber),#f0b07a); }
+
+  /* ── DEVICE PIE ── */
+  .device-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .device-card {
+    text-align:center; padding:16px 12px;
+    background:var(--sand); border-radius:var(--radius-md);
+    border:1px solid var(--linen);
+  }
+  .device-icon  { font-size:1.8rem; margin-bottom:6px; display:block; }
+  .device-count { font-family:var(--font-display); font-size:1.6rem; color:var(--olive-deep); line-height:1; }
+  .device-label { font-size:0.72rem; color:var(--ink-soft); margin-top:3px; text-transform:uppercase; letter-spacing:0.08em; }
+
+  /* ── RECENT VISITS TABLE ── */
+  .visit-table { width:100%; border-collapse:collapse; }
+  .visit-table th {
+    font-size:0.7rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.1em; color:var(--ink-soft);
+    padding:0 12px 10px 0; text-align:left; border-bottom:1px solid var(--linen);
+  }
+  .visit-table td {
+    padding:10px 12px 10px 0; font-size:0.83rem; color:var(--ink-mid);
+    border-bottom:1px solid var(--paper);
+  }
+  .visit-table tr:last-child td { border-bottom:none; }
+  .badge {
+    display:inline-block; padding:3px 9px; border-radius:100px; font-size:0.72rem; font-weight:700;
+  }
+  .badge-mobile  { background:#fef3e2; color:#b45309; }
+  .badge-tablet  { background:#eff6ff; color:#1d4ed8; }
+  .badge-desktop { background:var(--moss-tint); color:var(--olive); }
+
+  /* ── REPLIES ── */
+  .replies-list { display:flex; flex-direction:column; gap:16px; }
+  .reply-card {
+    border:1px solid var(--linen); border-radius:var(--radius-md);
+    padding:18px 20px; background:var(--sand);
+    position:relative;
+  }
+  .reply-card.unread { border-left:3px solid var(--terra); background:var(--amber-pale); }
+  .reply-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+  .reply-sender strong { display:block; font-size:0.9rem; color:var(--olive-deep); }
+  .reply-sender span   { font-size:0.78rem; color:var(--ink-soft); }
+  .reply-meta { font-size:0.75rem; color:var(--ink-soft); text-align:right; }
+  .reply-message { font-size:0.88rem; line-height:1.7; color:var(--ink-mid); }
+  .reply-email-link { font-size:0.8rem; color:var(--terra); margin-top:8px; display:inline-block; }
+  .no-data { text-align:center; padding:40px 20px; color:var(--ink-soft); font-size:0.9rem; }
+  .no-data span { font-size:2rem; display:block; margin-bottom:10px; }
+
+  /* ── SCROLL GAUGE ── */
+  .gauge-wrap { display:flex; align-items:center; gap:20px; padding:8px 0; }
+  .gauge-circle {
+    width:90px; height:90px; border-radius:50%; flex-shrink:0;
+    background: conic-gradient(var(--olive-soft) 0%, var(--sand) 0%);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    box-shadow:inset 0 0 0 10px var(--paper);
+  }
+  .gauge-pct { font-family:var(--font-display); font-size:1.3rem; font-weight:700; color:var(--olive-deep); }
+  .gauge-desc { font-size:0.85rem; color:var(--ink-mid); line-height:1.6; }
+
+  /* ── FOOTER ── */
+  .dash-footer { text-align:center; padding:32px; color:var(--ink-soft); font-size:0.78rem; }
+
+  /* ── SECTION DIVIDER ── */
+  .dash-section-label {
+    font-size:0.72rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--olive-soft); margin:32px 0 16px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .dash-section-label::after { content:''; flex:1; height:1px; background:var(--linen); }
+
+  @media(max-width:700px){
+    .dash-grid{ grid-template-columns:1fr; }
+    .kpi-grid { grid-template-columns:1fr 1fr; }
+    .device-grid { grid-template-columns:1fr; }
+    .dash-body { padding:24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">🌿</div>
+    <h1>Campaign Dashboard</h1>
+    <p>Minder Plastic Velp — Analytics &amp; Replies</p>
+    <input type="password" id="passwordInput" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter') checkPassword()" />
+    <button class="login-btn" onclick="checkPassword()">Sign In</button>
+    <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+    <p style="margin-top:20px;font-size:0.75rem;color:var(--ink-soft);">
+      Default password: <strong>velp2025</strong><br/>
+      Change it in dashboard.html line 1
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div id="dashboard">
+
+  <div class="topbar">
+    <div class="topbar-logo">📊 Velp Dashboard</div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="refreshData()">↻ Refresh</button>
+      <button class="topbar-btn" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="topbar-btn danger" onclick="clearAllData()">🗑 Clear Data</button>
+      <button class="topbar-btn" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+
+    <!-- ── KPI ROW ── -->
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card">
+        <span class="kpi-label">Total Visits</span>
+        <span class="kpi-value" id="kpiVisits">—</span>
+        <span class="kpi-sub">page loads recorded</span>
+      </div>
+      <div class="kpi-card accent-terra">
+        <span class="kpi-label">Unique Visitors</span>
+        <span class="kpi-value" id="kpiUnique">—</span>
+        <span class="kpi-sub">distinct browsers</span>
+      </div>
+      <div class="kpi-card accent-amber">
+        <span class="kpi-label">Email Clicks</span>
+        <span class="kpi-value" id="kpiClicks">—</span>
+        <span class="kpi-sub">emails opened</span>
+      </div>
+      <div class="kpi-card accent-olive">
+        <span class="kpi-label">Conversion Rate</span>
+        <span class="kpi-value" id="kpiConversion">—</span>
+        <span class="kpi-sub">visitors who clicked</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Avg Scroll Depth</span>
+        <span class="kpi-value" id="kpiScroll">—</span>
+        <span class="kpi-sub">how far visitors read</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Replies Received</span>
+        <span class="kpi-value" id="kpiReplies">—</span>
+        <span class="kpi-sub">form submissions</span>
+      </div>
+    </div>
+
+    <!-- ── ROW 1: Sections + Devices ── -->
+    <div class="dash-section-label">Visitor Behaviour</div>
+    <div class="dash-grid">
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Section Engagement</h3>
+          <span>views per section</span>
+        </div>
+        <div class="panel-body">
+          <div class="bar-list" id="sectionBars">
+            <div class="no-data"><span>📭</span>No data yet. Visit the website first.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Device Breakdown</h3>
+          <span>by screen size</span>
+        </div>
+        <div class="panel-body">
+          <div class="device-grid" id="deviceGrid">
+            <div class="device-card"><span class="device-icon">📱</span><div class="device-count" id="devMobile">0</div><div class="device-label">Mobile</div></div>
+            <div class="device-card"><span class="device-icon">📟</span><div class="device-count" id="devTablet">0</div><div class="device-label">Tablet</div></div>
+            <div class="device-card"><span class="device-icon">💻</span><div class="device-count" id="devDesktop">0</div><div class="device-label">Desktop</div></div>
+          </div>
+          <div style="margin-top:24px;">
+            <div class="panel-head" style="padding:0 0 12px; border-bottom:none; margin-bottom:12px;">
+              <h3>Avg. Scroll Depth</h3>
+            </div>
+            <div class="gauge-wrap">
+              <div class="gauge-circle" id="scrollGauge">
+                <span class="gauge-pct" id="scrollPct">0%</span>
+              </div>
+              <p class="gauge-desc">
+                On average, visitors scroll this far down the page before leaving.
+                Above 70% means your content is being read thoroughly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── ROW 2: Traffic Sources + Recent Visits ── -->
+    <div class="dash-grid">
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Traffic Sources</h3>
+          <span>where visitors come from</span>
+        </div>
+        <div class="panel-body">
+          <div class="bar-list" id="referrerBars">
+            <div class="no-data"><span>🔗</span>No referrer data yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Daily Visits</h3>
+          <span>last 7 days</span>
+        </div>
+        <div class="panel-body">
+          <div class="bar-list" id="dailyBars">
+            <div class="no-data"><span>📅</span>No visit history yet.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RECENT VISITS TABLE ── -->
+    <div class="dash-section-label">Recent Activity</div>
+    <div class="dash-grid full">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Recent Visits</h3>
+          <span>last 20 entries</span>
+        </div>
+        <div class="panel-body" style="overflow-x:auto;">
+          <table class="visit-table" id="visitTable">
+            <thead>
+              <tr>
+                <th>Date</th><th>Time</th><th>Device</th>
+                <th>Source</th><th>Visitor ID</th>
+              </tr>
+            </thead>
+            <tbody id="visitTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--ink-soft);">No visits recorded yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REPLIES ── -->
+    <div class="dash-section-label">Supermarket Replies</div>
+    <div class="dash-grid full">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Received Messages</h3>
+          <span id="repliesCount">0 messages</span>
+        </div>
+        <div class="panel-body">
+          <div class="replies-list" id="repliesList">
+            <div class="no-data"><span>💬</span>No replies yet. Share the website with local supermarkets!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dash-body -->
+
+  <div class="dash-footer">
+    Minder Plastic Velp · Dashboard · Data stored locally in this browser
+    · <a href="index.html" style="color:var(--olive);">← Back to website</a>
+  </div>
+
+</div><!-- /dashboard -->
+
+<script>
+/* ─── CONFIG ──────────────────────────────────────────── */
+// Change this password before publishing!
+const DASHBOARD_PASSWORD = "velp2025";
+
+/* ─── STORAGE KEYS (must match script.js) ──────────── */
+const K = {
+  clicks:       "velp_email_clicks",
+  visits:       "velp_visit_log",
+  scrollDepth:  "velp_scroll_depth",
+  sectionViews: "velp_section_views",
+  replies:      "velp_replies",
+};
+
+/* ─── AUTH ──────────────────────────────────────────── */
+function checkPassword() {
+  const val = document.getElementById("passwordInput").value;
+  if (val === DASHBOARD_PASSWORD) {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("dashboard").style.display   = "block";
+    renderDashboard();
+  } else {
+    document.getElementById("loginError").style.display = "block";
+    document.getElementById("passwordInput").value = "";
+  }
+}
+function logout() {
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("dashboard").style.display   = "none";
+  document.getElementById("passwordInput").value = "";
+}
+
+/* ─── DATA HELPERS ──────────────────────────────────── */
+function getVisits() {
+  try { return JSON.parse(localStorage.getItem(K.visits) || "[]"); } catch { return []; }
+}
+function getClicks()   { return parseInt(localStorage.getItem(K.clicks) || "0", 10); }
+function getReplies()  { try { return JSON.parse(localStorage.getItem(K.replies) || "[]"); } catch { return []; } }
+function getSections() { try { return JSON.parse(localStorage.getItem(K.sectionViews) || "{}"); } catch { return {}; } }
+function getScrollHistory() { try { return JSON.parse(localStorage.getItem(K.scrollDepth) || "[]"); } catch { return []; } }
+
+function getUniqueCount(visits) {
+  return new Set(visits.map(v => v.visitorId)).size;
+}
+function getAvgScroll() {
+  const h = getScrollHistory();
+  if (!h.length) return 0;
+  return Math.round(h.reduce((s,e) => s + (e.depth||0), 0) / h.length);
+}
+
+/* ─── RENDER ────────────────────────────────────────── */
+function renderDashboard() {
+  const visits  = getVisits();
+  const clicks  = getClicks();
+  const replies = getReplies();
+  const unique  = getUniqueCount(visits);
+  const avg     = getAvgScroll();
+  const conv    = unique > 0 ? Math.round((clicks / unique) * 100) + "%" : "—";
+
+  // KPIs
+  setText("kpiVisits",     visits.length);
+  setText("kpiUnique",     unique);
+  setText("kpiClicks",     clicks);
+  setText("kpiConversion", conv);
+  setText("kpiScroll",     avg + "%");
+  setText("kpiReplies",    replies.length);
+
+  // Devices
+  const devs = { mobile:0, tablet:0, desktop:0 };
+  visits.forEach(v => { if(devs[v.device]!==undefined) devs[v.device]++; });
+  setText("devMobile",  devs.mobile);
+  setText("devTablet",  devs.tablet);
+  setText("devDesktop", devs.desktop);
+
+  // Scroll gauge — animate the conic gradient
+  const gauge = document.getElementById("scrollGauge");
+  const pct   = document.getElementById("scrollPct");
+  if (gauge && pct) {
+    pct.textContent = avg + "%";
+    gauge.style.background = `conic-gradient(var(--olive-soft) ${avg}%, var(--paper) ${avg}%)`;
+  }
+
+  // Section bars
+  renderSectionBars();
+
+  // Referrer bars
+  renderReferrerBars(visits);
+
+  // Daily visit bars
+  renderDailyBars(visits);
+
+  // Visit table
+  renderVisitTable(visits);
+
+  // Replies
+  renderReplies(replies);
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* Section engagement bars */
+function renderSectionBars() {
+  const sections = getSections();
+  const labels = {
+    hero:"Hero", problem:"The Problem", impact:"Impact / Stats",
+    reusable:"Solutions", supermarkets:"Supermarkets",
+    action:"Take Action", reply:"Reply Form"
+  };
+  const entries = Object.entries(labels)
+    .map(([id,label]) => ({ label, count: sections[id] || 0 }))
+    .sort((a,b) => b.count - a.count);
+
+  const max = Math.max(...entries.map(e=>e.count), 1);
+  const container = document.getElementById("sectionBars");
+  if (!container) return;
+
+  if (entries.every(e => e.count === 0)) {
+    container.innerHTML = `<div class="no-data"><span>📭</span>No section data yet.</div>`;
+    return;
+  }
+
+  container.innerHTML = entries.map(e => `
+    <div class="bar-item">
+      <div class="bar-meta">
+        <span>${e.label}</span>
+        <span><strong>${e.count}</strong> views</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${Math.round((e.count/max)*100)}%"></div>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* Referrer bars */
+function renderReferrerBars(visits) {
+  const counts = {};
+  visits.forEach(v => { counts[v.referrer||"direct"] = (counts[v.referrer||"direct"]||0)+1; });
+  const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const max = Math.max(...entries.map(e=>e[1]),1);
+  const container = document.getElementById("referrerBars");
+  if (!container) return;
+  if (!entries.length) {
+    container.innerHTML = `<div class="no-data"><span>🔗</span>No data yet.</div>`;
+    return;
+  }
+  container.innerHTML = entries.map(([ref,count]) => `
+    <div class="bar-item">
+      <div class="bar-meta"><span>${ref}</span><span><strong>${count}</strong></span></div>
+      <div class="bar-track">
+        <div class="bar-fill amber" style="width:${Math.round((count/max)*100)}%"></div>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* Daily bars — last 7 days */
+function renderDailyBars(visits) {
+  const days = {};
+  // Build last 7 day labels
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    const label = d.toLocaleDateString("nl-NL", {day:"numeric",month:"short"});
+    days[label] = 0;
+  }
+  visits.forEach(v => {
+    const d = new Date(v.timestamp);
+    const label = d.toLocaleDateString("nl-NL", {day:"numeric",month:"short"});
+    if (days[label] !== undefined) days[label]++;
+  });
+  const entries = Object.entries(days);
+  const max = Math.max(...entries.map(e=>e[1]),1);
+  const container = document.getElementById("dailyBars");
+  if (!container) return;
+  container.innerHTML = entries.map(([day,count]) => `
+    <div class="bar-item">
+      <div class="bar-meta"><span>${day}</span><span><strong>${count}</strong></span></div>
+      <div class="bar-track">
+        <div class="bar-fill terra" style="width:${Math.round((count/max)*100)}%"></div>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* Visit table */
+function renderVisitTable(visits) {
+  const tbody = document.getElementById("visitTableBody");
+  if (!tbody) return;
+  const recent = [...visits].reverse().slice(0, 20);
+  if (!recent.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--ink-soft);">No visits recorded yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = recent.map(v => `
+    <tr>
+      <td>${v.date||"—"}</td>
+      <td>${v.time||"—"}</td>
+      <td><span class="badge badge-${v.device||'desktop'}">${v.device||"desktop"}</span></td>
+      <td>${v.referrer||"direct"}</td>
+      <td style="font-family:monospace;font-size:0.75rem;color:var(--ink-soft);">${(v.visitorId||"—").slice(0,12)}</td>
+    </tr>
+  `).join("");
+}
+
+/* Replies */
+function renderReplies(replies) {
+  const container = document.getElementById("repliesList");
+  const counter   = document.getElementById("repliesCount");
+  if (counter) counter.textContent = replies.length + " message" + (replies.length!==1?"s":"");
+  if (!container) return;
+  if (!replies.length) {
+    container.innerHTML = `<div class="no-data"><span>💬</span>No replies yet.</div>`;
+    return;
+  }
+  container.innerHTML = [...replies].reverse().map(r => `
+    <div class="reply-card ${r.read?'':'unread'}">
+      <div class="reply-header">
+        <div class="reply-sender">
+          <strong>${escapeHtml(r.name)}</strong>
+          <span>${escapeHtml(r.org)} ${r.email!=="—" ? `· ${escapeHtml(r.email)}` : ""}</span>
+        </div>
+        <div class="reply-meta">${r.date} at ${r.time}</div>
+      </div>
+      <div class="reply-message">${escapeHtml(r.message)}</div>
+      ${r.email!=="—" ? `<a href="mailto:${escapeHtml(r.email)}" class="reply-email-link">Reply via email →</a>` : ""}
+    </div>
+  `).join("");
+
+  // Mark all as read after viewing
+  const updated = replies.map(r => ({...r, read:true}));
+  localStorage.setItem(K.replies, JSON.stringify(updated));
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+/* ─── REFRESH ───────────────────────────────────────── */
+function refreshData() { renderDashboard(); }
+
+/* ─── EXPORT CSV ────────────────────────────────────── */
+function exportCSV() {
+  const visits = getVisits();
+  if (!visits.length) { alert("No visit data to export yet."); return; }
+  const header = "Date,Time,Device,Referrer,VisitorID\n";
+  const rows   = visits.map(v =>
+    `${v.date},${v.time},${v.device},${v.referrer},${v.visitorId}`
+  ).join("\n");
+  const blob = new Blob([header+rows], { type:"text/csv" });
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement("a"), { href:url, download:"velp-visits.csv" });
+  a.click(); URL.revokeObjectURL(url);
+}
+
+/* ─── CLEAR DATA ────────────────────────────────────── */
+function clearAllData() {
+  if (!confirm("Are you sure? This will permanently delete ALL analytics data, visit history, and replies. This cannot be undone.")) return;
+  Object.values(K).forEach(k => localStorage.removeItem(k));
+  renderDashboard();
+  alert("All data cleared.");
+}
+</script>
+</body>
+</html>
