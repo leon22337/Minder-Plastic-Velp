@@ -1,57 +1,48 @@
 // api/counter.js — Vercel Serverless Function
-// Handles the shared click counter using Vercel KV (Redis).
+// Uses the REDIS_URL environment variable injected by the Redis Cloud integration.
 //
-// GET  /api/counter        → returns { count: N }
-// POST /api/counter        → increments by 1, returns { count: N }
-//
-// Setup: In your Vercel project dashboard, go to Storage → Create KV Database
-// → Connect it to this project. That's it — KV_REST_API_URL and
-// KV_REST_API_TOKEN are injected automatically as environment variables.
+// GET  /api/counter  → returns { count: N }
+// POST /api/counter  → increments by 1, returns { count: N }
+
+import { createClient } from "redis";
 
 const COUNTER_KEY = "velp_email_clicks";
 
+let client = null;
+
+async function getClient() {
+  if (client && client.isOpen) return client;
+  client = createClient({ url: process.env.REDIS_URL });
+  client.on("error", (err) => console.error("Redis error:", err));
+  await client.connect();
+  return client;
+}
+
 export default async function handler(req, res) {
-  // Allow cross-origin requests from the frontend
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // Handle preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
-  // Check KV environment variables are available
-  const kvUrl   = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-
-  if (!kvUrl || !kvToken) {
-    // KV not set up yet — return 0 gracefully so the site still works
-    console.warn("Vercel KV not configured. Set up KV storage in your Vercel dashboard.");
+  if (!process.env.REDIS_URL) {
+    console.warn("REDIS_URL not set — returning 0");
     return res.status(200).json({ count: 0, configured: false });
   }
 
   try {
+    const redis = await getClient();
+
     if (req.method === "POST") {
-      // Atomically increment the counter
-      const response = await fetch(`${kvUrl}/incr/${COUNTER_KEY}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${kvToken}` },
-      });
-      const data = await response.json();
-      return res.status(200).json({ count: data.result ?? 0, configured: true });
-
+      const count = await redis.incr(COUNTER_KEY);
+      return res.status(200).json({ count, configured: true });
     } else {
-      // GET — just read the current value
-      const response = await fetch(`${kvUrl}/get/${COUNTER_KEY}`, {
-        headers: { Authorization: `Bearer ${kvToken}` },
-      });
-      const data = await response.json();
-      return res.status(200).json({ count: data.result ?? 0, configured: true });
+      const raw   = await redis.get(COUNTER_KEY);
+      const count = raw ? parseInt(raw, 10) : 0;
+      return res.status(200).json({ count, configured: true });
     }
-
   } catch (err) {
-    console.error("KV error:", err);
-    return res.status(500).json({ count: 0, error: "Counter unavailable" });
+    console.error("Redis handler error:", err);
+    return res.status(500).json({ count: 0, error: String(err) });
   }
 }
