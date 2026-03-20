@@ -1,7 +1,5 @@
 // api/counter.js — Vercel Serverless Function
-// Uses REDIS_URL environment variable (set in Vercel dashboard).
-// GET  /api/counter  → { count: N }
-// POST /api/counter  → increments, returns { count: N }
+// Connects to Redis Cloud using TLS (required by Redis Cloud).
 
 const COUNTER_KEY = "velp_email_clicks";
 
@@ -17,9 +15,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Dynamically import redis (installed via package.json)
     const { createClient } = await import("redis");
-    const client = createClient({ url: redisUrl });
+
+    // Redis Cloud requires TLS — force rediss:// even if env var says redis://
+    const tlsUrl = redisUrl.replace(/^redis:\/\//, "rediss://");
+
+    const client = createClient({
+      url: tlsUrl,
+      socket: {
+        tls: true,
+        rejectUnauthorized: false, // Redis Cloud uses self-signed certs
+      },
+    });
+
     await client.connect();
 
     let count;
@@ -36,7 +44,5 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("Redis error:", err.message);
     return res.status(500).json({ count: 0, error: err.message });
-  }
-}
   }
 }
