@@ -445,9 +445,13 @@ const Analytics = {
 /* ============================================================
    6. CLICK COUNTER
    ============================================================ */
-/* ── Shared counter via /api/counter (Vercel KV) ──────────
-   Falls back to localStorage if the API isn't available yet
-   (e.g. during local development or before KV is set up).   */
+/* ── Shared counter via JSONBin ────────────────────────────
+   Stores click count in a free JSONBin so all devices share
+   the same number. Falls back to localStorage on error.     */
+
+const JSONBIN_ID  = "69bd4f31aa77b81da9018c2b";
+const JSONBIN_KEY = "$2a$10$VpL7zU0UMUitubSJC5oW4eaLZYVAq6Jy9Y8lfxE06eIbY/PRQ7ITi";
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
 function updateCounterDisplay(val) {
   const el = document.getElementById("counterDisplay");
@@ -460,13 +464,11 @@ function updateCounterDisplay(val) {
 
 async function fetchCount() {
   try {
-    const res  = await fetch("/api/counter");
+    const res  = await fetch(`${JSONBIN_URL}/latest`, {
+      headers: { "X-Master-Key": JSONBIN_KEY }
+    });
     const data = await res.json();
-    if (data.configured === false) {
-      // KV not set up — fall back to localStorage value
-      return parseInt(localStorage.getItem(KEYS.clicks) || "0", 10);
-    }
-    return data.count ?? 0;
+    return data.record?.count ?? 0;
   } catch {
     return parseInt(localStorage.getItem(KEYS.clicks) || "0", 10);
   }
@@ -474,15 +476,25 @@ async function fetchCount() {
 
 async function incrementCount() {
   try {
-    const res  = await fetch("/api/counter", { method: "POST" });
-    const data = await res.json();
-    if (data.configured === false) {
-      // KV not set up — fall back to localStorage
-      const n = parseInt(localStorage.getItem(KEYS.clicks) || "0", 10) + 1;
-      localStorage.setItem(KEYS.clicks, n);
-      return n;
-    }
-    return data.count ?? 0;
+    // First get current count
+    const getRes  = await fetch(`${JSONBIN_URL}/latest`, {
+      headers: { "X-Master-Key": JSONBIN_KEY }
+    });
+    const getData = await getRes.json();
+    const newCount = (getData.record?.count ?? 0) + 1;
+
+    // Then write the new count back
+    await fetch(JSONBIN_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": JSONBIN_KEY
+      },
+      body: JSON.stringify({ count: newCount })
+    });
+
+    localStorage.setItem(KEYS.clicks, newCount);
+    return newCount;
   } catch {
     const n = parseInt(localStorage.getItem(KEYS.clicks) || "0", 10) + 1;
     localStorage.setItem(KEYS.clicks, n);
